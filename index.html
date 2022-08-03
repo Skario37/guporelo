@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <!-- Primary Meta Tags -->
+    <title>Guess Pokémon Region Locations</title>
+    <meta name="title" content="Guess Pokémon Region Locations">
+    <meta name="description" content="Guessing game on the locations of the next Pokémon game based on the official images. Guess where the location is. That's all. Feel free to share your guess.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <!-- <meta property="og:url" content="https://skario37.github.io/sylab/"> -->
+    <meta property="og:title" content="Guess Pokémon Region Locations">
+    <meta property="og:description" content="Guessing game on the locations of the next Pokémon game based on the official images. Guess where the location is. That's all. Feel free to share your guess.">
+    <!-- <meta property="og:image" content="https://raw.githubusercontent.com/Skario37/sylab/main/logo.png"> -->
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <!-- <meta property="twitter:url" content="https://skario37.github.io/sylab/"> -->
+    <meta property="twitter:title" content="Guess Pokémon Region Locations">
+    <meta property="twitter:description" content="Guessing game on the locations of the next Pokémon game based on the official images. Guess where the location is. That's all. Feel free to share your guess.">
+    <!-- <meta property="twitter:image" content="https://raw.githubusercontent.com/Skario37/sylab/main/logo.png"> -->
+
+    <!--  -->
+    <meta name="author" content="Skario">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico" />
+    <link rel="stylesheet" href="style.css">
+    <script src="index.js"></script>
+    <script src="script/ext/dom-to-image-more.min.js"></script>
+    <script src="script/ext/filesaver.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Guess Pokémon Region Locations</h1>
+    </header>
+    <div id="content" class="content">
+        <div>
+            <p>Left click on location to place cursor.</p>
+            <p>Right click on location to show image.</p>
+        </div>
+        <div>
+            <button id="btn-dl" class="btn" onclick="download()"><i class="fa fa-download"></i>Download</button>
+        </div>
+        <p id="position" class="position"></p>
+        <div id="guess" class="guess">
+            <div id="locations" class="locations"></div>
+            <!-- image -->
+            <!-- map -->
+        </div>
+    </div>
+</body>
+</html>
