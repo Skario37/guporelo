@@ -5,7 +5,8 @@ let contentElement = null,
     mapElement = null, 
     areaElement = null,
     locationsElement = null,
-    positionElement = null;
+    positionElement = null,
+    watermark = null;
 
 function __main__() {
     if (!window.fetch) return alert("Your browser doesn't support fetch.");
@@ -14,6 +15,7 @@ function __main__() {
     guessElement = document.getElementById("guess");
     locationsElement = document.getElementById("locations");
     positionElement = document.getElementById("position");
+    watermark = document.getElementById("watermark");
 
     imgElement = createImageElement("map.jpg");
     imgElement.onload = imgLoaded;
@@ -108,12 +110,12 @@ function addLocations(width, height) {
                             }
                             areaElement.onmouseup = (e) => {
                                 cursorElement.classList.add("show");
-                                const x = Math.round(e.pageX - imgRect.left);
-                                const y = Math.round(e.pageY - imgRect.top);
                                 const cursRect = cursorElement.getBoundingClientRect();
+                                const x = Math.round(e.pageX - cursRect.width);
+                                const y = Math.round(e.pageY - cursRect.height / 2 - 15);
 
-                                cursorElement.style.left = (e.pageX - cursRect.width) + "px";
-                                cursorElement.style.top = (e.pageY - cursRect.height / 2 - 15) + "px";
+                                cursorElement.style.left = x + "px";
+                                cursorElement.style.top = y + "px";
                                 
                                 marking(eimg.target);
                                 stopMarking(eimg.target);
@@ -146,20 +148,38 @@ function download() {
     const locations = Array.from(locationsElement.children);
     const ilocs = [];
     for (let i = 0; i < locations.length; i++) {
-        if (loc.classList.contains("marked")) {
-            loc.classList.remove("marked");
+        if (locations[i].classList.contains("marked")) {
+            locations[i].classList.remove("marked");
             ilocs.push(i);
         }
     }
+
+    watermark.classList.add("show");
+    const imgRect = imgElement.getBoundingClientRect();
+    const wRect = watermark.getBoundingClientRect();
+    const x = 0;
+    const y = Math.round(imgRect.bottom - wRect.height * 4);
+    watermark.style.fontSize = imgRect.width / 50 + "px";
+    watermark.style.left = x + "px";
+    watermark.style.top = y + "px";
+
+    const btn = document.getElementById("btn-dl");
+    const defInnerText = btn.innerText;
+    btn.innerText = "Wait...";
 
     domtoimage
         .toBlob(guessElement)
         .then(blob => {
             saveAs(blob, "guess-pokemon-locations.png");
-
             for (const i of ilocs) {
                 locations[i].classList.add("marked");
             }
         })
-        .catch(e => alert("oops, something went wrong!", e))
+        .catch(e => {
+            alert("oops, something went wrong!", e)
+        })
+        .finally(() => {
+            btn.innerText = defInnerText;
+            watermark.classList.remove("show");
+        });
 }

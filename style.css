@@ -1,3 +1,10 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 4 version
+*/
+
 html, body {
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     background-color: rgb(255, 244, 236);
@@ -27,15 +34,20 @@ area.on {
     display:block;
 }
 .locations {
-    flex-direction: row;
-    flex-wrap: wrap;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
 }
 .locations.onuse {
     background-color: white;
     opacity: .5;   
 }
 .locations.marked {
-    filter: grayscale(1);
+    -webkit-filter: grayscale(1);
+            filter: grayscale(1);
 }
 
 .position {
@@ -50,7 +62,9 @@ area.on {
 .cursors {
     display: none;
     position: absolute;
-    align-self: center;
+    -ms-flex-item-align: center;
+        -ms-grid-row-align: center;
+        align-self: center;
     pointer-events: none;
 }
 
@@ -70,4 +84,30 @@ area.on {
 
 .btn:hover {
     background-color: rgb(46, 70, 63);
+}
+
+.actions {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: space-evenly;
+        -ms-flex-pack: space-evenly;
+            justify-content: space-evenly;
+}
+
+.watermark {
+    display: none;
+    position: absolute;
+    -ms-flex-item-align: center;
+        -ms-grid-row-align: center;
+        align-self: center;
+    pointer-events: none;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.watermark.show {
+    display: initial;
 }
