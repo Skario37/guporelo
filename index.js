@@ -11,7 +11,7 @@ let locationSelected = false;
 
 function __main__() {
     if (!window.fetch) return alert("Your browser doesn't support fetch.");
-    window.localStorage.clear();
+    // window.localStorage.clear();
 
     contentElement = document.getElementById("content");
     guessElement = document.getElementById("guess");
@@ -99,7 +99,6 @@ function addLocations(width, height) {
                     if (saving) return;
                     eimg.stopImmediatePropagation();
                     eimg.stopPropagation();
-                    const imgRect = getOffset(imgElement);
                     if (eimg.button === 0) { // left
                         if (eimg.target.classList.contains("onuse")) {
                             stopMarking(eimg.target);
