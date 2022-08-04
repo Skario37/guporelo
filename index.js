@@ -7,6 +7,7 @@ let contentElement = null,
     locationsElement = null,
     positionElement = null,
     watermark = null;
+let saving = false;
 
 function __main__() {
     if (!window.fetch) return alert("Your browser doesn't support fetch.");
@@ -25,6 +26,7 @@ function __main__() {
 
 function imgLoaded() {
     guessElement.style.width = this.clientWidth + "px";
+    guessElement.style.height = this.clientHeight + "px";
     mapElement = createMapElement(this.clientWidth, this.clientHeight);
     areaElement = createAreaElement(this.clientWidth, this.clientHeight);
     
@@ -90,10 +92,15 @@ function addLocations(width, height) {
                 cursorElement.innerText = (i + 1) + "→";
                 cursorElement.style.fontSize = width / 30 + "px";
                 img.addEventListener("mouseup", (eimg) => {
+                    if (saving) return;
                     eimg.stopImmediatePropagation();
                     eimg.stopPropagation();
-                    const imgRect = imgElement.getBoundingClientRect();
+                    const imgRect = getOffset(imgElement);
                     if (eimg.button === 0) { // left
+                        const locations = Array.from(locationsElement.children);
+                        for (let i = 0; i < locations.length; i++) {
+                            locations[i].classList.remove("onuse");
+                        }
                         if (eimg.target.classList.contains("onuse")) {
                             stopMarking(eimg.target);
                         } else {
@@ -113,7 +120,6 @@ function addLocations(width, height) {
                                 const cursRect = cursorElement.getBoundingClientRect();
                                 const x = Math.round(e.pageX - cursRect.width);
                                 const y = Math.round(e.pageY - cursRect.height / 2 - 15);
-
                                 cursorElement.style.left = x + "px";
                                 cursorElement.style.top = y + "px";
                                 
@@ -145,6 +151,9 @@ function marking(e) {
 }
 
 function download() {
+    if (saving) return;
+    saving = true;
+    
     const locations = Array.from(locationsElement.children);
     const ilocs = [];
     for (let i = 0; i < locations.length; i++) {
@@ -152,6 +161,13 @@ function download() {
             locations[i].classList.remove("marked");
             ilocs.push(i);
         }
+    }
+
+    const cursors = document.getElementsByClassName("cursors");
+    const guessOffset = getOffset(guessElement);
+    for (let i = 0; i < cursors.length; i++) {
+        cursors[i].style.left = (parseInt(cursors[i].style.left.substring(-2)) - guessOffset.left) + "px";
+        cursors[i].style.top = (parseInt(cursors[i].style.top.substring(-2)) - guessOffset.top) + "px";
     }
 
     watermark.classList.add("show");
@@ -174,6 +190,10 @@ function download() {
             for (const i of ilocs) {
                 locations[i].classList.add("marked");
             }
+            for (let i = 0; i < cursors.length; i++) {
+                cursors[i].style.left = (parseInt(cursors[i].style.left.substring(-2)) + guessOffset.left) + "px";
+                cursors[i].style.top = (parseInt(cursors[i].style.top.substring(-2)) + guessOffset.top) + "px";
+            }
         })
         .catch(e => {
             alert("oops, something went wrong!", e)
@@ -181,5 +201,17 @@ function download() {
         .finally(() => {
             btn.innerText = defInnerText;
             watermark.classList.remove("show");
+            saving = false;
         });
+}
+
+function getOffset(el) {
+    var _x = 0;
+    var _y = 0;
+    while(el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
+        _x += el.offsetLeft - el.scrollLeft;
+        _y += el.offsetTop - el.scrollTop;
+        el = el.offsetParent;
+    }
+    return {top: _y, left: _x};
 }
