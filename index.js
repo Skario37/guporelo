@@ -8,6 +8,7 @@ let contentElement = null,
     positionElement = null,
     watermark = null;
 let saving = false;
+let locationSelected = false;
 
 function __main__() {
     if (!window.fetch) return alert("Your browser doesn't support fetch.");
@@ -22,9 +23,13 @@ function __main__() {
     imgElement.onload = imgLoaded;
 
     guessElement.appendChild(imgElement);
+
+    startTuto();
 }
 
 function imgLoaded() {
+    
+    document.body.style.width = this.clientWidth + "px";
     guessElement.style.width = this.clientWidth + "px";
     guessElement.style.height = this.clientHeight + "px";
     mapElement = createMapElement(this.clientWidth, this.clientHeight);
@@ -97,13 +102,15 @@ function addLocations(width, height) {
                     eimg.stopPropagation();
                     const imgRect = getOffset(imgElement);
                     if (eimg.button === 0) { // left
-                        const locations = Array.from(locationsElement.children);
-                        for (let i = 0; i < locations.length; i++) {
-                            locations[i].classList.remove("onuse");
-                        }
                         if (eimg.target.classList.contains("onuse")) {
                             stopMarking(eimg.target);
+                            locationSelected = false;
                         } else {
+                            locationSelected = true;
+                            const locations = Array.from(locationsElement.children);
+                            for (let i = 0; i < locations.length; i++) {
+                                locations[i].classList.remove("onuse");
+                            }
                             eimg.target.classList.add("onuse");
                             areaElement.classList.add("on");
                             positionElement.classList.add("show");
@@ -153,7 +160,7 @@ function marking(e) {
 function download() {
     if (saving) return;
     saving = true;
-    
+
     const locations = Array.from(locationsElement.children);
     const ilocs = [];
     for (let i = 0; i < locations.length; i++) {
@@ -214,4 +221,79 @@ function getOffset(el) {
         el = el.offsetParent;
     }
     return {top: _y, left: _x};
+}
+
+function startTuto() {
+    if (window.localStorage.getItem("tutoFinish") === "yes") return;
+    const m = document.getElementById("modal");
+    m.classList.add("show");
+
+    const m_title = document.getElementById("modal_title");
+    const m_btn = document.getElementById("modal_btn_next");
+    m_title.nextSibling;
+    tutoStep1(m_title, m_btn);
+}
+
+function tutoStep1(t, b) {
+    t.children[0].innerText = "Hello!";
+    t.children[1].innerText = "Ready to guess locations?";
+    t.children[2].innerText = "Images may take time to load.";
+
+    b.onclick = () => tutoStep2(t, b);
+    b.innerText = "Let's go!";
+}
+
+function tutoStep2(t, b) {
+    t.children[0].innerText = "Tutorial";
+    t.children[1].innerText = "Click on a location to select it.";
+    t.children[2].innerText = "";
+
+    b.onclick = () => {
+        if (locationSelected) {
+            locationsElement.children[0].classList.remove("tuto-highlight");
+            tutoStep3(t, b);
+        } else {
+            t.children[1].innerText = "Please click on the highlighted location to select it.";
+        }
+    };
+    b.innerText = "Next";
+
+    locationsElement.children[0].scrollIntoView();
+    locationsElement.children[0].classList.add("tuto-highlight");
+}
+
+function tutoStep3(t, b) {
+    const m_elem = document.getElementById("modal_elem");
+    m_elem.classList.add("get-out-flux");
+    document.body.appendChild(m_elem);
+
+
+    t.children[0].innerText = "Tutorial";
+    t.children[1].innerText = "Click somewhere on the map to add the location cursor.";
+    t.children[2].innerText = "";
+
+    b.onclick = () => {
+        closeModal();
+    };
+    b.innerText = "Finish";
+
+    imgElement.scrollIntoView();
+    document.getElementById("cur_0").classList.add("tuto-up");
+    positionElement.classList.add("tuto-up");
+    imgElement.classList.add("tuto-highlight");
+}
+
+function closeModal() {
+    const m = document.getElementById("modal");
+    const m_cell = document.getElementById("modal_cell");
+    const m_elem = document.getElementById("modal_elem");
+    m_cell.appendChild(m_elem);
+    m.classList.remove("show");
+
+    document.getElementById("cur_0").classList.remove("tuto-up");
+    positionElement.classList.remove("tuto-up");
+    imgElement.classList.remove("tuto-highlight");
+    locationsElement.children[0].classList.remove("tuto-highlight");
+    
+    window.localStorage.setItem("tutoFinish", "yes");
 }

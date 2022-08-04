@@ -31,18 +31,14 @@
     <script src="script/ext/filesaver.min.js"></script>
 </head>
 <body>
-    <header>
-        <h1>Guess Pokémon Region Locations</h1>
+    <header id="header" class="header">
+        <div>
+            <h1>Guess Pokémon Region Locations</h1>
+        </div>
     </header>
     <div id="content" class="content">
         <div id="actions" class="actions">
-            <div>
-                <p>Left click on location to place cursor.</p>
-                <p>Right click on location to show image.</p>
-            </div>
-            <div>
-                <button id="btn-dl" class="btn" onclick="download()"><i class="fa fa-download"></i>Download</button>
-            </div>
+            <button id="btn-dl" class="btn" onclick="download()"><i class="fa fa-download"></i>Download</button>
         </div>
         <p id="position" class="position"></p>
         <div id="guess" class="guess">
@@ -50,6 +46,23 @@
             <!-- image -->
             <!-- map -->
             <span id="watermark" class="watermark">Skario#9348 - @skariokevin - https://skario37.github.io/guporelo/</span>
+        </div>
+    </div>
+    <div id="modal" class="modal">
+        <div id="modal_container" class="modal_container">
+            <div id="modal_cell" class="modal_cell">
+                <div id="modal_elem" class="modal_elem">
+                    <div id="modal_title" class="modal_title">
+                        <h2></h2>
+                        <div></div>
+                        <div id="subtext" class="subtext"></div>
+                    </div>
+                    <div id="modal_footer" class="modal_footer">
+                        <button id="modal_btn_next" class="btn wide"><i class="fa"></i></button>
+                    </div>
+                    <a id="modal_btn" class="modal_btn" onclick="closeModal()">X</a>
+                </div>
+            </div>
         </div>
     </div>
 </body>
