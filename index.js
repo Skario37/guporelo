@@ -5,18 +5,17 @@ let contentElement = null,
     mapElement = null, 
     areaElement = null,
     locationsElement = null,
-    positionElement = null,
     watermark = null;
 let saving = false;
 let locationSelected = false;
 
 function __main__() {
     if (!window.fetch) return alert("Your browser doesn't support fetch.");
+    window.localStorage.clear();
 
     contentElement = document.getElementById("content");
     guessElement = document.getElementById("guess");
     locationsElement = document.getElementById("locations");
-    positionElement = document.getElementById("position");
     watermark = document.getElementById("watermark");
 
     imgElement = createImageElement("map.jpg");
@@ -113,15 +112,6 @@ function addLocations(width, height) {
                             }
                             eimg.target.classList.add("onuse");
                             areaElement.classList.add("on");
-                            positionElement.classList.add("show");
-                            areaElement.onmousemove = (e) => {
-                                const x = Math.round(e.pageX - imgRect.left);
-                                const y = Math.round(e.pageY - imgRect.top);
-                                positionElement.style.left = e.pageX + "px";
-                                positionElement.style.top = e.pageY + "px";
-                                positionElement.style.fontSize = Math.max(50, 100 - (window.devicePixelRatio * 100)) + "px";
-                                positionElement.innerText = `x: ${x}; y: ${y}`;
-                            }
                             areaElement.onmouseup = (e) => {
                                 cursorElement.classList.add("show");
                                 const cursRect = cursorElement.getBoundingClientRect();
@@ -148,7 +138,6 @@ function addLocations(width, height) {
 function stopMarking(e) {
     e.classList.remove("onuse");
     areaElement.classList.remove("on");
-    positionElement.classList.remove("show");
     areaElement.onmouseup = null;
     areaElement.onmousemove = null;
 }
@@ -279,7 +268,6 @@ function tutoStep3(t, b) {
 
     imgElement.scrollIntoView();
     document.getElementById("cur_0").classList.add("tuto-up");
-    positionElement.classList.add("tuto-up");
     imgElement.classList.add("tuto-highlight");
 }
 
@@ -291,7 +279,6 @@ function closeModal() {
     m.classList.remove("show");
 
     document.getElementById("cur_0").classList.remove("tuto-up");
-    positionElement.classList.remove("tuto-up");
     imgElement.classList.remove("tuto-highlight");
     locationsElement.children[0].classList.remove("tuto-highlight");
     
