@@ -168,7 +168,6 @@ area.on {
     height: auto;
     width: 468px;
     border-radius: 14px;
-    transform: translate3d(0, 0, 0) scale(1) !important;
     opacity: 1 !important;
     display: inline-block;
     z-index: 20;
@@ -180,8 +179,9 @@ area.on {
 .modal_elem.get-out-flux {
     position: fixed;
     display: block;
-    top: 0;
+    top: 50%;
     bottom: auto;
+    transform: translate(-50%, -50%);
 }
 
 .modal_title {

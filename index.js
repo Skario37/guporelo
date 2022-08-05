@@ -293,7 +293,7 @@ function tutoStep3(t, b) {
     b.innerText = "Finish";
 
     imgElement.scrollIntoView();
-    document.getElementById("cur_0").classList.add("tuto-up");
+    document.getElementById("cur_1").classList.add("tuto-up");
     imgElement.classList.add("tuto-highlight");
 }
 
@@ -304,7 +304,7 @@ function closeModal() {
     m_cell.appendChild(m_elem);
     m.classList.remove("show");
 
-    document.getElementById("cur_0").classList.remove("tuto-up");
+    document.getElementById("cur_1").classList.remove("tuto-up");
     imgElement.classList.remove("tuto-highlight");
     locationsElement.children[0].classList.remove("tuto-highlight");
     
