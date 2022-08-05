@@ -47,7 +47,7 @@ area.on {
         flex-wrap: wrap;
 }
 .locations.onuse {
-    background-color: white;
+    background-color: rgb(255, 244, 236);
     opacity: .5;   
 }
 .locations.marked {
@@ -76,6 +76,10 @@ area.on {
     padding: 12px 30px;
     cursor: pointer;
     font-size: 20px;
+}
+
+.btn.btn-dl {
+    font-size: 40px;
 }
 
 .btn.wide {
@@ -226,9 +230,17 @@ area.on {
 .tuto-highlight {
     position: absolute;
     z-index: 10;
-    box-shadow: 0 10px 20px rgb(255,255,255);
+    box-shadow: 0 10px 20px rgb(255, 244, 236);
 }
 
 .tuto-up {
     z-index: 20;
+}
+
+.text-cursor {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgb(255, 244, 236);
 }

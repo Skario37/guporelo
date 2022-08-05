@@ -97,11 +97,8 @@ function addLocations(width, height) {
                 img.id = "loc_" + i;
                 img.classList.add("locations");
 
-                const cursorElement = document.createElement("span");
-                cursorElement.classList.add("cursors");
-                cursorElement.id = "cur_" + i;
-                cursorElement.innerText = (i + 1) + "→";
-                cursorElement.style.fontSize = width / 30 + "px";
+                const cursorElement = createCursorElement(i, width, height);
+                
                 img.addEventListener("mouseup", (eimg) => {
                     if (saving) return;
                     eimg.stopImmediatePropagation();
@@ -121,8 +118,8 @@ function addLocations(width, height) {
                             areaElement.onmouseup = (e) => {
                                 cursorElement.classList.add("show");
                                 const cursRect = cursorElement.getBoundingClientRect();
-                                const x = Math.round(e.pageX - cursRect.width);
-                                const y = Math.round(e.pageY - cursRect.height / 2);
+                                const x = Math.round(e.pageX - cursRect.width / 2);
+                                const y = Math.round(e.pageY - cursRect.height);
                                 cursorElement.style.left = x + "px";
                                 cursorElement.style.top = y + "px";
                                 cursorElement.setAttribute("data-left", x);
@@ -142,6 +139,27 @@ function addLocations(width, height) {
         });
 }
 
+function createCursorElement(i, width, height) {
+    const cursorElement = document.createElement("div");
+    cursorElement.classList.add("cursors");
+    cursorElement.id = "cur_" + (i + 1);
+    cursorElement.style.fontSize = width / 50 + "px";
+    
+    const pinImgElement = document.createElement("img");
+    pinImgElement.src = "img/pin.png";
+    pinImgElement.style.width = width / 30 + "px";
+
+    const textCursorElement = document.createElement("span");
+    textCursorElement.innerText = (i + 1);
+    textCursorElement.id = "text-cursor";
+    textCursorElement.classList.add("text-cursor");
+
+    cursorElement.appendChild(pinImgElement);
+    cursorElement.appendChild(textCursorElement);
+
+    return cursorElement;
+}
+
 function stopMarking(e) {
     e.classList.remove("onuse");
     areaElement.classList.remove("on");
@@ -153,7 +171,7 @@ function marking(e) {
     e.classList.add("marked");
 }
 
-function download() {
+async function downloadMap() {
     if (saving) return;
     saving = true;
 
@@ -170,6 +188,7 @@ function download() {
     const guessOffset = getOffset(guessElement);
     for (let i = 0; i < cursors.length; i++) {
         cursors[i].style.top = (parseInt(cursors[i].style.top.substring(-2)) - guessOffset.top) + "px";
+        cursors[i].style.left = (parseInt(cursors[i].style.left.substring(-2)) - guessOffset.left) + "px";
     }
     const imgOffset = getOffset(imgElement);
     watermark.classList.add("show");
@@ -178,6 +197,9 @@ function download() {
     const defInnerText = btn.innerText;
     btn.innerText = "Wait...";
 
+    const guessMargin = guessElement.style.margin;
+    guessElement.style.margin = 0;
+
     domtoimage
         .toJpeg(guessElement, { quality: 0.9 })
         .then(d => {
@@ -185,16 +207,18 @@ function download() {
             link.download = "guess-pokemon-locations.jpeg";
             link.href = d;
             link.click();
-            // saveAs(d, "guess-pokemon-locations.png");
+            // saveAs(d, "guess-pokemon-locations.jpeg");
+            guessElement.style.margin = guessMargin;
             for (const i of ilocs) {
                 locations[i].classList.add("marked");
             }
             for (let i = 0; i < cursors.length; i++) {
                 cursors[i].style.top = (parseInt(cursors[i].style.top.substring(-2)) + guessOffset.top) + "px";
+                cursors[i].style.left = (parseInt(cursors[i].style.left.substring(-2)) + guessOffset.left) + "px";
             }
         })
         .catch(e => {
-            alert("oops, something went wrong!", e)
+            alert("oops, something went wrong!", e);
         })
         .finally(() => {
             btn.innerText = defInnerText;
@@ -294,7 +318,6 @@ window.onresize = () => {
         if (cursors[i].classList.contains("show")) {
             let left = parseInt(cursors[i].style.left.substring(-2));
             const dataLeft = parseInt(cursors[i].getAttribute("data-left"));
-            console.log("a", dataLeft, left, lastMarginLeft, rectGuess.left)
             if (lastMarginLeft > rectGuess.left) { // + zoom
                 if (rectGuess.left === 0) {
                     left = left - lastMarginLeft;
