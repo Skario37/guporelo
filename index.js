@@ -8,6 +8,7 @@ let contentElement = null,
     watermark = null;
 let saving = false;
 let locationSelected = false;
+let zoomLevel = false;
 
 function __main__() {
     if (!window.fetch) return alert("Your browser doesn't support fetch.");
@@ -27,8 +28,7 @@ function __main__() {
 }
 
 function imgLoaded() {
-    
-    document.body.style.width = this.clientWidth + "px";
+    imgElement.width -= window.innerWidth - document.documentElement.clientWidth;
     guessElement.style.width = this.clientWidth + "px";
     guessElement.style.height = this.clientHeight + "px";
     mapElement = createMapElement(this.clientWidth, this.clientHeight);
@@ -62,6 +62,7 @@ function createImageElement(url) {
     const img = new Image();
     img.useMap = "#map";
     img.src = url;
+    img.width = window.screen.width;
     return img;
 }
 
@@ -115,7 +116,8 @@ function addLocations(width, height) {
                                 cursorElement.classList.add("show");
                                 const cursRect = cursorElement.getBoundingClientRect();
                                 const x = Math.round(e.pageX - cursRect.width);
-                                const y = Math.round(e.pageY - cursRect.height / 2 - 15);
+                                console.log(cursorElement.style.lineHeight)
+                                const y = Math.round(e.pageY - cursRect.height / 2);
                                 cursorElement.style.left = x + "px";
                                 cursorElement.style.top = y + "px";
                                 
