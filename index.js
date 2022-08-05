@@ -169,25 +169,27 @@ function download() {
     const cursors = document.getElementsByClassName("cursors");
     const guessOffset = getOffset(guessElement);
     for (let i = 0; i < cursors.length; i++) {
-        cursors[i].style.left = (parseInt(cursors[i].style.left.substring(-2)) - guessOffset.left) + "px";
         cursors[i].style.top = (parseInt(cursors[i].style.top.substring(-2)) - guessOffset.top) + "px";
     }
-
+    const imgOffset = getOffset(imgElement);
     watermark.classList.add("show");
-
+    watermark.style.top = imgOffset.top - guessOffset.top + "px";
     const btn = document.getElementById("btn-dl");
     const defInnerText = btn.innerText;
     btn.innerText = "Wait...";
 
     domtoimage
-        .toBlob(guessElement)
-        .then(blob => {
-            saveAs(blob, "guess-pokemon-locations.png");
+        .toJpeg(guessElement, { quality: 0.9 })
+        .then(d => {
+            const link = document.createElement("a");
+            link.download = "guess-pokemon-locations.jpeg";
+            link.href = d;
+            link.click();
+            // saveAs(d, "guess-pokemon-locations.png");
             for (const i of ilocs) {
                 locations[i].classList.add("marked");
             }
             for (let i = 0; i < cursors.length; i++) {
-                cursors[i].style.left = (parseInt(cursors[i].style.left.substring(-2)) + guessOffset.left) + "px";
                 cursors[i].style.top = (parseInt(cursors[i].style.top.substring(-2)) + guessOffset.top) + "px";
             }
         })
