@@ -79,7 +79,7 @@ area.on {
 }
 
 .btn.btn-dl {
-    font-size: 40px;
+    font-size: 20px;
 }
 
 .btn.wide {
@@ -243,4 +243,10 @@ area.on {
     left: 50%;
     transform: translate(-50%, -50%);
     color: rgb(255, 244, 236);
+}
+
+@media (max-width: 468px) {
+    .modal_elem {
+        width: 100%;
+    }
 }
