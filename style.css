@@ -9,6 +9,7 @@ html, body {
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     background-color: rgb(255, 244, 236);
     font-size: 20px;
+    margin: 0;
 }
 
 header {
@@ -97,6 +98,10 @@ area.on {
         -ms-flex-pack: space-evenly;
             justify-content: space-evenly;
     margin: 5px;
+}
+
+.guess {
+    margin: auto;
 }
 
 .watermark {
