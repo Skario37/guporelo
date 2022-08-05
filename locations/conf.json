@@ -1,20 +1,40 @@
 {
-    "locations": [
-        "1.png",
-        "2.png",
-        "3.png",
-        "4.png",
-        "5.png",
-        "6.png",
-        "7.png",
-        "8.png",
-        "9.png",
-        "10.png",
-        "11.png",
-        "12.png",
-        "13.png",
-        "14.png",
-        "15.png",
-        "16.png"
-    ] 
+    "locations": {
+        "icons" : [
+            "1-ico.png",
+            "2-ico.png",
+            "3-ico.png",
+            "4-ico.png",
+            "5-ico.png",
+            "6-ico.png",
+            "7-ico.png",
+            "8-ico.png",
+            "9-ico.png",
+            "10-ico.png",
+            "11-ico.png",
+            "12-ico.png",
+            "13-ico.png",
+            "14-ico.png",
+            "15-ico.png",
+            "16-ico.png"
+        ],
+        "images" : [
+            "1.png",
+            "2.png",
+            "3.png",
+            "4.png",
+            "5.png",
+            "6.png",
+            "7.png",
+            "8.png",
+            "9.png",
+            "10.png",
+            "11.png",
+            "12.png",
+            "13.png",
+            "14.png",
+            "15.png",
+            "16.png"
+        ]
+    }
 }
