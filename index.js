@@ -9,9 +9,11 @@ let contentElement = null,
 let saving = false;
 let locationSelected = false;
 let zoomLevel = false;
+let lastMarginLeft = "";
 
 function __main__() {
     if (!window.fetch) return alert("Your browser doesn't support fetch.");
+    zoomLevel = window.devicePixelRatio;
     // window.localStorage.clear();
 
     contentElement = document.getElementById("content");
@@ -38,6 +40,7 @@ function imgLoaded() {
     guessElement.appendChild(mapElement);
 
     locationsElement.style.width = this.clientWidth + "px";
+    lastMarginLeft = guessElement.getBoundingClientRect().left;
     addLocations(this.clientWidth, this.clientHeight);
 }
 
@@ -62,7 +65,9 @@ function createImageElement(url) {
     const img = new Image();
     img.useMap = "#map";
     img.src = url;
-    img.width = window.screen.width;
+    img.id = "map";
+    img.classList.add("map");
+    img.width = document.body.clientWidth;
     return img;
 }
 
@@ -83,9 +88,10 @@ function addLocations(width, height) {
     fetch("locations/conf.json")
         .then(r => r.json())
         .then(d => {
-            for (let i = 0; i < d.locations.length; i++) {
+            for (let i = 0; i < d.locations.icons.length; i++) {
                 const img = new Image();
-                img.src = "locations/" + d.locations[i];
+                img.src = "locations/" + d.locations.icons[i];
+                img.setAttribute("data-src", "locations/" + d.locations.images[i])
                 img.width = width / 10;
                 img.height = height / 10;
                 img.id = "loc_" + i;
@@ -116,17 +122,17 @@ function addLocations(width, height) {
                                 cursorElement.classList.add("show");
                                 const cursRect = cursorElement.getBoundingClientRect();
                                 const x = Math.round(e.pageX - cursRect.width);
-                                console.log(cursorElement.style.lineHeight)
                                 const y = Math.round(e.pageY - cursRect.height / 2);
                                 cursorElement.style.left = x + "px";
                                 cursorElement.style.top = y + "px";
-                                
+                                cursorElement.setAttribute("data-left", x);
+                                cursorElement.setAttribute("data-top", y);
                                 marking(eimg.target);
                                 stopMarking(eimg.target);
                             }
                         }
                     } else if (eimg.button === 2) {
-                        window.open(eimg.target.getAttribute('src'),'Image');
+                        window.open(eimg.target.getAttribute('data-src'),'Image');
                     }
                 });
 
@@ -168,13 +174,6 @@ function download() {
     }
 
     watermark.classList.add("show");
-    const imgRect = imgElement.getBoundingClientRect();
-    const wRect = watermark.getBoundingClientRect();
-    const x = 0;
-    const y = Math.round(imgRect.bottom - wRect.height * 4);
-    watermark.style.fontSize = imgRect.width / 50 + "px";
-    watermark.style.left = x + "px";
-    watermark.style.top = y + "px";
 
     const btn = document.getElementById("btn-dl");
     const defInnerText = btn.innerText;
@@ -284,4 +283,29 @@ function closeModal() {
     locationsElement.children[0].classList.remove("tuto-highlight");
     
     window.localStorage.setItem("tutoFinish", "yes");
+}
+
+window.onresize = () => {
+    const rectGuess = guessElement.getBoundingClientRect();
+    const cursors = document.getElementsByClassName("cursors");
+    for (let i = 0; i < cursors.length; i++) {
+        if (cursors[i].classList.contains("show")) {
+            let left = parseInt(cursors[i].style.left.substring(-2));
+            const dataLeft = parseInt(cursors[i].getAttribute("data-left"));
+            console.log("a", dataLeft, left, lastMarginLeft, rectGuess.left)
+            if (lastMarginLeft > rectGuess.left) { // + zoom
+                if (rectGuess.left === 0) {
+                    left = left - lastMarginLeft;
+                } else {
+                    left = dataLeft + rectGuess.left;
+                }
+            } else if (lastMarginLeft < rectGuess.left) { // - zoom
+                left += (rectGuess.left - lastMarginLeft);
+            }
+
+            cursors[i].style.left = left + "px";
+        }
+    }
+
+    lastMarginLeft = rectGuess.left;
 }
