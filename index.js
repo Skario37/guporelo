@@ -97,7 +97,7 @@ function addLocations(width, height) {
                 img.id = "loc_" + i;
                 img.classList.add("locations");
 
-                const cursorElement = createCursorElement(i, width, height);
+                const cursorElement = createCursorElement(i, width / 60, height);
                 
                 img.addEventListener("mouseup", (eimg) => {
                     if (saving) return;
@@ -143,11 +143,11 @@ function createCursorElement(i, width, height) {
     const cursorElement = document.createElement("div");
     cursorElement.classList.add("cursors");
     cursorElement.id = "cur_" + (i + 1);
-    cursorElement.style.fontSize = width / 50 + "px";
+    cursorElement.style.fontSize = width / 2 + "px";
     
     const pinImgElement = document.createElement("img");
     pinImgElement.src = "img/pin.png";
-    pinImgElement.style.width = width / 30 + "px";
+    pinImgElement.style.width = width + "px";
 
     const textCursorElement = document.createElement("span");
     textCursorElement.innerText = (i + 1);
