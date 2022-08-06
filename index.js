@@ -9,7 +9,7 @@ let contentElement = null,
 let saving = false;
 let locationSelected = false;
 let zoomLevel = false;
-let lastMarginLeft = "";
+let lastOffsetGuess = {};
 
 function __main__() {
     if (!window.fetch) return alert("Your browser doesn't support fetch.");
@@ -40,7 +40,7 @@ function imgLoaded() {
     guessElement.appendChild(mapElement);
 
     locationsElement.style.width = this.clientWidth + "px";
-    lastMarginLeft = guessElement.getBoundingClientRect().left;
+    lastOffsetGuess = getOffset(guessElement);
     addLocations(this.clientWidth, this.clientHeight);
 }
 
@@ -312,25 +312,37 @@ function closeModal() {
 }
 
 window.onresize = () => {
-    const rectGuess = guessElement.getBoundingClientRect();
+    const offsetGuess = getOffset(guessElement);
     const cursors = document.getElementsByClassName("cursors");
     for (let i = 0; i < cursors.length; i++) {
         if (cursors[i].classList.contains("show")) {
+            let top = parseInt(cursors[i].style.top.substring(-2));
+            if (lastOffsetGuess.top > offsetGuess.top) { // + zoom
+                if (offsetGuess.top === 0) {
+                    top -= lastOffsetGuess.top;
+                } else {
+                    top -= (lastOffsetGuess.top - offsetGuess.top);
+                }
+            } else if (lastOffsetGuess.top < offsetGuess.top) { // - zoom
+                top += (offsetGuess.top - lastOffsetGuess.top);
+            }
+
             let left = parseInt(cursors[i].style.left.substring(-2));
             const dataLeft = parseInt(cursors[i].getAttribute("data-left"));
-            if (lastMarginLeft > rectGuess.left) { // + zoom
-                if (rectGuess.left === 0) {
-                    left = left - lastMarginLeft;
+            if (lastOffsetGuess.left > offsetGuess.left) { // + zoom
+                if (offsetGuess.left === 0) {
+                    left -= lastOffsetGuess.left;
                 } else {
-                    left = dataLeft + rectGuess.left;
+                    left = dataLeft + offsetGuess.left;
                 }
-            } else if (lastMarginLeft < rectGuess.left) { // - zoom
-                left += (rectGuess.left - lastMarginLeft);
+            } else if (lastOffsetGuess.left < offsetGuess.left) { // - zoom
+                left += (offsetGuess.left - lastOffsetGuess.left);
             }
 
             cursors[i].style.left = left + "px";
+            cursors[i].style.top = top + "px";
         }
     }
 
-    lastMarginLeft = rectGuess.left;
+    lastOffsetGuess = offsetGuess;
 }
