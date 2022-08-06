@@ -89,17 +89,23 @@ function addLocations(width, height) {
         .then(r => r.json())
         .then(d => {
             for (let i = 0; i < d.locations.icons.length; i++) {
+                const divImg = document.createElement("div");
+                divImg.classList.add("location");
+                divImg.style.width = width / 10 + "px";
+
                 const img = new Image();
                 img.src = "locations/" + d.locations.icons[i];
-                img.setAttribute("data-src", "locations/" + d.locations.images[i])
-                img.width = width / 10;
-                img.height = height / 10;
+                img.setAttribute("data-src", "locations/" + d.locations.images[i]);
                 img.id = "loc_" + i;
-                img.classList.add("locations");
+                img.width = width / 10;
+
+                const imgText = document.createElement("div");
+                imgText.classList.add("loc-number");
+                imgText.innerText = i + 1;
 
                 const cursorElement = createCursorElement(i, width / 60, height);
                 
-                img.addEventListener("mouseup", (eimg) => {
+                divImg.addEventListener("mouseup", (eimg) => {
                     if (saving) return;
                     eimg.stopImmediatePropagation();
                     eimg.stopPropagation();
@@ -111,7 +117,7 @@ function addLocations(width, height) {
                             locationSelected = true;
                             const locations = Array.from(locationsElement.children);
                             for (let i = 0; i < locations.length; i++) {
-                                locations[i].classList.remove("onuse");
+                                locations[i].children[0].classList.remove("onuse");
                             }
                             eimg.target.classList.add("onuse");
                             areaElement.classList.add("on");
@@ -133,7 +139,11 @@ function addLocations(width, height) {
                     }
                 });
 
-                locationsElement.appendChild(img);
+
+
+                divImg.appendChild(img);
+                divImg.appendChild(imgText);
+                locationsElement.appendChild(divImg);
                 guessElement.appendChild(cursorElement);
             }
         });
@@ -178,8 +188,8 @@ async function downloadMap() {
     const locations = Array.from(locationsElement.children);
     const ilocs = [];
     for (let i = 0; i < locations.length; i++) {
-        if (locations[i].classList.contains("marked")) {
-            locations[i].classList.remove("marked");
+        if (locations[i].children[0].classList.contains("marked")) {
+            locations[i].children[0].classList.remove("marked");
             ilocs.push(i);
         }
     }

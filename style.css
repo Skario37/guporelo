@@ -39,6 +39,7 @@ area.on {
     display:block;
 }
 .locations {
+    display: flex;
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
         -ms-flex-direction: row;
@@ -46,13 +47,24 @@ area.on {
     -ms-flex-wrap: wrap;
         flex-wrap: wrap;
 }
-.locations.onuse {
+.location {
+    position: relative;
+}
+.location img.onuse  {
     background-color: rgb(255, 244, 236);
     opacity: .5;   
 }
-.locations.marked {
+.location img.marked {
     -webkit-filter: grayscale(1);
             filter: grayscale(1);
+}
+
+.location .loc-number {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: 24px;
+    color: rgb(25, 24, 49);
 }
 
 .cursors {
